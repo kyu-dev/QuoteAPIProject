@@ -14,9 +14,7 @@ app.listen(PORT, () => {
 
 app.get("/api/quotes/random", (req, res, next) => {
   const random = getRandomElement(quotes);
-  res.send({
-    quote: { quotes },
-  });
+  res.send({ quote: random });
 });
 
 app.get("/api/quotes", (req, res, next) => {
@@ -26,5 +24,15 @@ app.get("/api/quotes", (req, res, next) => {
     res.send({ quotes: quotePerPerson });
   } else {
     res.send({ quotes: quotes });
+  }
+});
+
+app.post("/api/quotes", (req, res, next) => {
+  const newQuote = { person: req.query.person, quote: req.query.quote };
+  if (newQuote.person && newQuote.quote) {
+    quotes.push(newQuote);
+    res.send({ quote: newQuote });
+  } else {
+    res.status(400).send({ error: "Invalid quote data" });
   }
 });
